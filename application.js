@@ -3,7 +3,7 @@ let playerScore=0;
 const playerScore_span=document.getElementById("player-score");
 const computerScore_span=document.getElementById("computer-score");
 const scoreBoard_div = document.querySelector(".scores");
-const result_div = document.querySelector(".result");
+const result_p = document.querySelector(".result > p");
 const rock_div = document.getElementById("r");
 const paper_div = document.getElementById("p");
 const scissors_div = document.getElementById("s");
@@ -14,19 +14,33 @@ function getComputerOption(){
     return choices[randomValue];
 }
 
-function win(choices,computerChoice){
+function convertLetter(letter){
+    if (letter == "r") return "Rock";
+    if (letter == "p") return "Paper";
+    return "Scissors";
+
+}
+
+function win(choice,computerChoice){
     playerScore++;
     playerScore_span.innerHTML=playerScore;
     computerScore_span.innerHTML=computerScore;
-    result_div.innerHTML=choices + "beats"+ computerChoice + ". You Win!";
+    result_p.innerHTML= `${convertLetter(choice)} beats ${convertLetter(computerChoice)}. You Win!`;
+    document.getElementById(choice).classList.add('green-glow');
+    setTimeout(function() {document.getElementById(choice).classList.remove('green-glow')},500)
 }
 
-function lose(){
-
+function lose(choice,computerChoice){
+    computerScore++;
+    playerScore_span.innerHTML=playerScore;
+    computerScore_span.innerHTML=computerScore;
+    result_p.innerHTML= `${convertLetter(choice)} lost to ${convertLetter(computerChoice)}. You Lose...`;
+    document.getElementById(choice).classList.add('red-glow');
+    setTimeout(function() {document.getElementById(choice).classList.remove('red-glow')},500)
 }
 
-function draw(){
-
+function draw(choice, computerChoice){
+    result_p.innerHTML= `${convertLetter(choice)} equals ${convertLetter(computerChoice)}. It's a draw.`;
 }
 
 function game(choice){
@@ -35,17 +49,17 @@ function game(choice){
         case "rs":
         case "pr":
         case "sp":
-            win();
+            win(choice, computerChoice);
             break;
         case "rp":
         case "ps":
         case "sr":
-            lose();
+            lose(choice, computerChoice);
             break;
         case "rr":
         case "pp":
         case "ss":
-            draw();
+            draw(choice, computerChoice);
             break;
     }
 }
@@ -55,11 +69,11 @@ function main(){
         game("r");
     })
 
-    rock_div.addEventListener('click', function() {
+    paper_div.addEventListener('click', function() {
         game("p");
     })
 
-    rock_div.addEventListener('click', function() {
+    scissors_div.addEventListener('click', function() {
         game("s");
     })
 }
